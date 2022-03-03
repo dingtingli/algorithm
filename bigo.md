@@ -7,3 +7,6 @@
 5. 高德纳算法分析方式
 6. 算法复杂度意义
 7. 常见的算法复杂的（log）
+
+https://home.csulb.edu/~tebert/teaching/lectures/328/bigO/bigO.pdf
+https://tandy.cs.illinois.edu/big-oh.pdf
