@@ -122,3 +122,90 @@ Argus 中还引入了调用流（call stream），它可以被认为是强制顺
 
 E 是一个面向对象的编程语言，为了安全的分布式计算而设计，由 Mark S. Miller 和 Dan Bornstein 等人于 1997 年在 Electric Communities 创建。E 的最主要贡献是它的 promises 解释器和执行器。这可以追溯到 Joule 语言（Tribble, Miller, Hardy, & Krieger, 1995），它是 E 的前身，一个数据流编程语言。重要的是 E 引入了最终的操作符 ` <- `，实现了 E 中的所谓的最终发送；换句话说，程序不用等待操作的完成，而是转到下一条顺序的语句。这和预期的立即调用语义不同，立即调用在 E 中看起来像是一个正常的方法调用。最终，发送队列等待交付，然后立即完成，并返回一个 promise。一个等待的交付包括 promise 的 resolver。后续的信息也可以在 promise 被 resolve 之前被最终发送。在这种情况下，一旦 promise 被 resolve ，这些信息就会被排队并转发。也就是说，一旦我们有了一个 promise， 我们就可以像最初的 promise 已经被 resolve 了一样，链式地进行几个 pipeline 的最终发送。这种 promise pipeline 的概念（Miller, Tribble, & Jellinghaus, 2007）已经被大多数当前的 future/promise 的解释器所接受。
 
+futures/promises 主要是学术的魅力，直到 21 世纪初，随着 web 应用开发，网络系统开发的新兴起，以及响应式 UI 需求的增加。
+
+在主流编程语言中， Python可能是第一个引入的，在 2002 年，有一个库在 twisted 库中引入了和 E 语言中的 promise 相同的结构（lefkowitz，2002）。twisted 引入了 deferred 对象，用来接收尚未完成操作的结果。在 twisted 中，deferred 对象就像普通的 first-class 对象，它们可以在普通对象的任何地方被传递，唯一的区别是 deferred 对象没有值。deferred 对象支持 callback，一旦操作的结果完成就会被调用（call）。
+
+可能在最近的记忆中，最著名的是 Javascript 中的 Promise。在 2007，受到 Python 中 Twisted 库的影响，Dojo 工具包的作者提出了 Twisted deferred 对象的 JavaScript 实现，被称为 `dojo.deferred`。这又影响了 Kris Zyp 在 2009 年提出 CommonJS Promises/A 规范 (Zyp, 2009)。同年， Ryan Dahl 发明了 Node.js。在早期版本中， Node.js 在非阻塞 API 中使用 promises。然而，Node.js 从 promises 转移到现在的 error-first callback API （回调的第一个参数应该是一个 error object）时，它为 promises 留下了一个空白需要填补。Q.js (Kowal, 2009)是 Kris Kowal 在这个时候提出的 Promises/A 规范的实现。AJ O'Neal 的 FuturesJS 库是另外一个用来解决流控制问题的库，但它没有使用严格意义上的 Promises。在 2011 年，JQuery V1.5 引入了 Promises，然而 JQuery 的 Promises API 与 Promises/A 规范有着细微的差别。随着 HTML5 和 不同 API 的出现，不同而混乱的接口，给已经臭名昭著的 callback hell 添油加醋。Promises/A+ 规范（Promises/A+, 2013）旨在解决这一问题。随着社区对Promises/A+规范的广泛接受，Promises 最终成为ECMAScript® 2015语言规范的一部分（ECMAScript, Association, & others, 2015）。然而，由于缺乏后向兼容性，以及 Promises/A+ 规范中缺少的其他功能，意味着 BlueBird 和 Q.js 等库在JavaScript生态系统中仍有一席之地。
+
+## 执行的语义
+
+随着多年来架构和运行时的发展和变化，实现 futures/promises 的技术也在不断地变化，以便将抽象转化为对系统资源的有效利用。这一部分，我们将介绍三种主要的执行模型，在流行的语言和库中，futures/promises 都是建立在这三种模型之上。也就是说，我们将看到 futures/promises 在这些语言和库的 API 下被执行和使用的不同方式。
+
+### 线程池（Thread Pools）
+
+线程池是一个抽象概念，它是的用户能给访问一组准备好的，闲置的现场，这些现场可以被赋予 work。线程池的实现负责 woker 的创建，管理和调度，如果不仔细处理，线程池将会变得非常棘手，影响性能。线程池有许多不同的风格，有许多不同的技术用于调度和执行任务，有固定的线程数量，也有线程池根据负载动态地调整自身大小。
+
+一个经典的线程池实现，是 Java的 Executor。它是一个执行 Runnable Task 的对象。 Executor 提供了一种抽象，隐藏了 task 如何实际运行的细节。这些细节，比如选择一个线程来运行任务，任务如何调度，都是由 Executor 接口的底层实现来管理。
+
+跟 Executor 类似，Scala 也包含了一个 ExecutionContexts，作为 scala.cocurrent 包的一部分。Scala 的 ExecutionContexts 背后的意图跟 Java 中的 Executor 一样。它负责高效的并发计算，而不需要线程池的用户过度担心调度等问题。重要的是，ExecutionContexts 可以被看作是一个接口；也就是说，可以对不同的底层线程池，实现相同的接口。
+
+虽然可以使用不同的线程池实现，但 Scala 默认的 ExecutionContext 是由 Java 的 ForkJoinPool 来支持的。线程池的实现，其特点是采用 work-stealing 算法，这个算法中空闲线程会获取之前安排给其他繁忙线程的任务。 ForkJoinPool 是一种流行的线程池实现，因为它比 Executor 有更好的性能，能够更好的避免线程池引起的死锁，并能够最大限度地减少线程切换的时间。
+
+Scala 的 futures（和 promises）是基于这个 ExecutionContext 接口连接到底层的线程池。虽然用户通常使用默认的由 ForkJoinPool 支持的 ExecutionContext，但是如果他们需要特别的行为，比如阻塞 futures，也可以选择提供（或实现）自己的 ExecutionContext。
+
+在 Scala 中，每次使用 future 或者 promise 时都需要传递某种 ExecutionContext，这个参数是隐式，通常用 ExecutionContext.global。例如，创建并运行一个基础 future：
+
+```scala
+implicit val ec = ExecutionContext.global
+val f : Future[String] = Future { “hello world” }
+```
+
+在这个例子中，全局（global）执行上下文被用来异步地创建 future。如前所述，future 的 ExecutionContext 参数是隐式的。这意味着，如果编译器在所谓的隐式作用域中找到一个 ExecutionContext 的实例，它就会自动地传递给对 Future 的调用，而不需要用户显式的传递。在上面的例子中，通过在声明 ec 时，使用 implicit 关键字，ec 被放入了隐式的作用域。
+
+就像前面提到的那样，Scala 中的 futures 和 proimse 是异步的，这是通过回调来实现的。比如：
+
+```scala
+implicit val ec = ExecutionContext.global
+
+val f = Future {
+  Http("http://api.fixed.io/latest?base=USD").asString
+}
+
+f.onComplete {
+  case Success(response) => println(response)
+  case Failure(t) => println(t.getMessage())
+}
+```
+在这个例子中，我们先创建了一个 future f，当它完成后，我们会提供两个可能的表达式，它们可以根据 future 的成功或者错误而被调用。在这个例子中，如果成功，我们将得到计算结果，即 Http 字符串，然后打印。如果出现异常，我们将得到异常的消息，并打印。
+
+那么，这一切都是如何运行的？
+
+正如前面提到的，futures 需要一个 ExecutionContext，它几乎是所有 future API 的隐式参数。这个 ExecutionContext 是用来执行futures 的。Scala 很灵活，可以让用户实现自己的 Execution Context，但是我们先来聊聊默认的 ExecutionContext，它是 ForkJoinPool。
+
+ForkJoinPool 是许多小型计算的理想选择，这些小型计算会自动生成然后在一起返回。Scala 的 ForkJoinPool 要求提交给它的 task （任务）是一个 ForkJoinTask。提交给全局 ExecutionContext 的 task 被悄悄地包装在一个 ForkJoinTask 中，然后被执行。ForkJoinPool 还支持可能的阻塞 task，如果需要的话，使用 ManagedBlock 方法可以创建一个备用线程，以确保在当前线程被阻塞的情况下，有足够的并行性。总而言之，ForkJoinPool 是一个非常好的通用 ExecutionContext，它在大多数场景下都工作得非常好。
+
+### 事件循环（Event Loops）
+
+### 线程模型（Thread Model）
+
+## 隐式 vs 显式 Promises
+
+## Promises pipeline
+
+## 处理异常
+
+### 现代的编程语言
+
+## 行动中的 Futures 和 Promises
+
+### Twitter Finagle
+
+### 可矫正性（correctables）
+
+### 傻瓜式 futures
+
+### Node.js Fibers(纤程)
+
+Java Asynchronous：
+https://juejin.cn/post/6970558076642394142
+
+C# Asynchronous：
+
+https://blog.walterlv.com/post/default-task-scheduler-and-thread-pool.html
+
+https://devblogs.microsoft.com/premier-developer/dissecting-the-async-methods-in-c/
+
+https://devblogs.microsoft.com/dotnet/configureawait-faq/
+
+https://vkontech.com/exploring-the-async-await-state-machine-nested-async-calls-and-configureawaitfalse/
