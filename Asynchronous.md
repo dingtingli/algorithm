@@ -35,7 +35,7 @@ Futures 和 Promises 是异步编程中经常使用的抽象，尤其是在分�
 
 最重要的是，future/promise 通常能够实现某种程度的并发。在 future 最初的定义中：
 
-> 这个结构（future x）立即返回表达式x的只的future，并同时开始评估 future。当对 x 的评估产生一个值时，该值将取代 future。
+> 这个结构（future x）立即返回代表表达式 x 值的future，并同时开始求值该 future。当对 x 的计算产生一个值时，该值将取代 future。
 >
 > Halstead, 1985
 
@@ -102,14 +102,23 @@ Java 8 中， `Future<T>` 接口有一些方法可以检查计算是否完成，
 >
 > Ingerman, 1961
 
-Thunks 被设计为一种在 Algol-60 过程调用中将实际参数和他们的形式定义（formal definitions）绑定在一起的方法。如果过程被调用是用一个表达式代替了一个形式参数（formal parameter），编译器会生成一个 thunk，他将计算表达式，并将结果的地址留在某个标准的位置。可以把 thunk 看作是一个延续或者函数，其目的是在单线程环境下进行评估。
+Thunks 被设计为一种在 Algol-60 过程调用中将实际参数和他们的形式定义（formal definitions）绑定在一起的方法。如果过程被调用是用一个表达式代替了一个形式参数（formal parameter），编译器会生成一个 thunk，他将计算表达式，并将结果的地址留在某个标准的位置。可以把 thunk 看作是一个延续或者函数，其目的是在单线程环境下进行求值。
 
-第一次提及 futures，是在 Baker 和 Hewitt 的论文中（关于进程增量的垃圾回收 Incremental Garbage Collection of Processes 1977）。他们创造了术语 call by future，用来描述调用约定（convertion），方法的每个形参（formal parameter）绑定到一个进程，该进程与其他参数并行地评估参数中的表达式。在这篇论文之前，Algol 68 也提出了一种使用这种并发的参数评估成为可能的方法，使用并行条款进行参数绑定。
+第一次提及 futures，是在 Baker 和 Hewitt 的论文中（关于进程增量的垃圾回收 Incremental Garbage Collection of Processes 1977）。他们创造了术语 call by future，用来描述调用约定（convertion），方法的每个形参（formal parameter）绑定到一个进程，该进程与其他参数并行地求值参数中的表达式。在这篇论文之前，Algol 68 也提出了一种使用这种并发的参数求值成为可能的方法，使用并行条款进行参数绑定。
 
 在论文中，Baker 和 Hewitt 提出了 Fetures 的概念，即代表一个表达式的 E 的 3 元组：
 
-1. 一个评估表达式 E 的过程。
+1. 一个求值表达式 E 的过程。
 2. 一个需要存储 E 的结果的内存位置。
 3. 一个正在等待 E 的进程列表。
 
-但重要的是，他们工作的重点不是 futures 的作用以及它们在异步分布式计算中的作用。相反，他们关注的是对那些评估函数不需要的表达式的进程进行垃圾回收。
+但重要的是，他们工作的重点不是 futures 的作用以及它们在异步分布式计算中的作用。相反，他们关注的是对那些函数不需要的表达式进行求值的进程实施垃圾回收。
+
+Halestead 在 1985 年提出了 Multilisp 语言，在这个  call by future 基础之上，又增加了 future 注释。在 Multilisp 中，将一个变量绑定到 future 表达式上将会创建一个新的进程，该进程求值这个表达式，并将其绑定到代表其结果的变量引用上。也就是说，Multilisp 引入了一种新的方法，可以在一个新的进程中并行的计算任意表达式。这使得我们可以超越实际的计算，继续处理，而不需要等待 future 的完成。如果 future 的结果永远不会被使用，那么启动的进程就不会被堵塞，从而避免了潜在的死锁来源。Multilisp 还包括一个惰性的 future 变体，叫 delay，它只是在程序中其他地方第一次需要该值是在会被求值。
+
+Multilisp 中的这种 future 设计反过来又影响了 Argus 语言（Liskov & Shrira 1988）中被称为 promise 的结构。就像 Multilisp 中的 future，Argus 中的 promise 想要成为一个占位符，用来表示未来可用的值的结果。不像 Multilisp 专注于单机的并发，Argus 的设计是为了推动分布式编程，特别专注于 promise，作为将异步 RPC 整合到 Argus 编程的一种方式。重要的是，通过对 promise 的引入，promise 扩展到 multilisp 的 future 之外。因此，在 Argus 中，当 promise 被调用，会创建一个立即返回的 promise，并在一个新的进程中进行类型安全的异步 RPC 调用。当 RPC 完成，调用者可以主动获取返回值。
+
+Argus 中还引入了调用流（call stream），它可以被认为是强制顺序执行并发调用的方式。发送者和接收者通过一个流连接在一起，在这个流上可以进行同步的 RPC 调用，在这个流上，发送者在收到回复之前可以进行很多的调用。然而，尽管非阻塞的流调用已经启动，底层的运行也确保了所有的调用和返回都是按照调用的顺序发生。也就是说，调用流确保了一次执行和有序交付。Argus 还引入了组合调用流的结构，以建立计算管道（pipeline），或计算有向无环图（directed acyclic graphs）。这些都是今天 promise pipeline 的前身。
+
+E 是一个面向对象的编程语言，为了安全的分布式计算而设计，由 Mark S. Miller 和 Dan Bornstein 等人于 1997 年在 Electric Communities 创建。E 的最主要贡献是它的 promises 解释器和执行器。这可以追溯到 Joule 语言（Tribble, Miller, Hardy, & Krieger, 1995），它是 E 的前身，一个数据流编程语言。重要的是 E 引入了最终的操作符 ` <- `，实现了 E 中的所谓的最终发送；换句话说，程序不用等待操作的完成，而是转到下一条顺序的语句。这和预期的立即调用语义不同，立即调用在 E 中看起来像是一个正常的方法调用。最终，发送队列等待交付，然后立即完成，并返回一个 promise。一个等待的交付包括 promise 的 resolver。后续的信息也可以在 promise 被 resolve 之前被最终发送。在这种情况下，一旦 promise 被 resolve ，这些信息就会被排队并转发。也就是说，一旦我们有了一个 promise， 我们就可以像最初的 promise 已经被 resolve 了一样，链式地进行几个 pipeline 的最终发送。这种 promise pipeline 的概念（Miller, Tribble, & Jellinghaus, 2007）已经被大多数当前的 future/promise 的解释器所接受。
+
