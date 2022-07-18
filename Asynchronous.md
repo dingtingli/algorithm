@@ -177,25 +177,398 @@ ForkJoinPool 是许多小型计算的理想选择，这些小型计算会自动�
 
 ### 事件循环（Event Loops）
 
+现代的平台和运行时通常依赖许多底层系统来运行。比如，有一个文件系统，数据库系统，以及网络服务，这些被一个特定的语言，库，或者框架所依赖。与这些底层的组件互动通常都会有一段时间，在这段时间内，我们什么都做不了，只是在等待响应。这是对计算资源的巨大浪费。
+
+JavaScript 是一个单线程的异步运行时。现在，传统的异步编程通常都跟多线程相关。但是，JavaScript 中不允许创建新的线程。相反，JavaScript 中的异步通过事件循环机制来实现。
+
+历史上，JavaScript 一直用来与浏览器中的 DOM 和 用户互动的，因此，事件驱动编程模式自然适合该语言。在 Node.js 的高吞吐量的场景中，这一模式的扩展性令人惊讶。
+
+事件驱动编程模式的总体思路是，逻辑控制流由事件处理的顺序决定。这是由一个不断监听事件的机制来支撑，当检测到事件时，就启动一个回调。这就是 JavaScript 事件循环的内核。
+
+一个典型的 JavaScript 引擎有几个基本的组件：
+ * Heap，用来分配对象的内存。
+ * Stack，函数调用框架进入 stack ，在那里函数从顶端开始执行。
+ * Queue，一个消息队列，用来存放要处理的消息。
+
+每条消息都有一个回调函数，当消息被处理是就会被触发。这些消息可以由用户行为产生，比如点击按钮或者滚动按钮，也可以由HTTP请求产生，比如请求数据库获取记录或者读写文件。
+
+将消息的排队从消息的执行中分离出来，意味着单线程不需要等待一个动作完成之后再转回到另一个动作。我们给想要做的动作附加一个回调函数，当时间一到，回调函数就会运行。回调在孤立的情况下运行良好，但是它们迫使我们进入一种连续传递的执行方式，也叫做回调地狱。
+
+```js
+getData = function(param, callback){
+  $.get('http://example.com/get/'+param,
+    function(responseText){
+      callback(responseText);
+    });
+}
+
+getData(0, function(a){
+  getData(a, function(b){
+    getData(b, function(c){
+      getData(c, function(d){
+        getData(d, function(e){
+         // ...
+        });
+      });
+    });
+  });
+});
+```
+对比
+
+```js
+getData = function(param, callback){
+  return new Promise(function(resolve, reject) {
+    $.get('http://example.com/get/'+param,
+    function(responseText){
+      resolve(responseText);
+    });
+  });
+}
+
+getData(0).then(getData)
+  .then(getData)
+  .then(getData)
+  .then(getData);
+```
+
+> 程序写得必须能让人阅读，顺便能让机器执行。
+>
+> -- Harold Abelson and Gerald Jay Sussman
+
+Promise 是一个抽象，它让 JavaScript 中的异步操作变得更有趣。回调导致了控制的倒置，规模变大之后这种倒置让人很难理解。从延续传递的风格来看，你指定了动作完成之后要继续做什么，被调用者只是返回了一个 Promise 对象。这就颠倒了责任链，因为现在调用者需要负责处理 Promise 的结果。
+
+ES 2015 规范规定“promises 不得在其创建的事件循环的同一回合中启动它的 resolution/rejection 功能”。这是一个重要的属性，因为他确保了执行顺序的确定性。而且，一旦一个 promise 被 fulfilled 或者 failed，promise 的值 必须不被改变，这确保了一个 promise 不能被多次 resolve。
+
+让我们来看一个例子，了解一下 JavaScript 引擎内部 promise resolution 的工作流。
+
+假设我们执行一个函数 g()，这个函数又调用了另外一个函数 f()。函数 f() 返回一个 Promise 对象，这个对象在倒计时 1 秒后，用一个值 `true` 来 resolve 这个 promise。一旦 f() 被 resolve，`true` 或者 `false` 就会根据 promsie 的值而被 alert。
+
+![PNG02](/doc/illustrations/asynchronous/2.png)
+
+现在，JavaScript 的运行时是单线程。这句话是对的，也是不对的。执行用户代码的线程是单线程。它执行 stack 顶部的函数，直到完成，然后再执行 stack 中的下一个。但是还会有一些其他的线程来帮助处理其他事情，比如网络，settimeout 等类型的事件。这个 timing 线程处理 settimeout 的计数。
+
+//WEBAPI
+
+![PNG03](/doc/illustrations/asynchronous/3.png)
+
+一旦 timer 完成，timer 线程会在消息队列中放入一个消息。然后队列中的消息有事件循环来处理。事件循环是一个简单的无限循环，它检查一个消息是否准备好被处理，并将它放入 stack 中，以便执行它的回调函数。
+
+![PNG04](/doc/illustrations/asynchronous/4.png)
+
+这里， 由于 future 被 resolve 为 true，所以当回调被执行时，会 alert 一个 true。
+
+![PNG05](/doc/illustrations/asynchronous/8.png)
+
+这里我们忽略了heap，但是所有的函数，变量和回调都存储在 heap 中。正如我们这里看到的，尽管 JavaScript 被称为单线程，还是有许多辅助的线程帮助主线程做一些事情，比如 timeout ，UI， 网络操作，文件操作等等。
+
+一直运行直到完成可以帮助我们以一种很好的方式推理代码的执行过程。一旦函数被启动，它就需要在转到主线程之前完成。它访问的数据不能被其他人修改，这也意味着每个函数要在合理的时间内完成，否则程序就很悬。这使得 JavaScript 更适合排队 I/O 任务，但不适合数据密集型任务，这些任务需要很长时间才能完成。
+
+我们还没有讨论异常处理，但异常的处理方式是完全一样的，异常的回调会被调用，带有异常的 promise 是 rejgected。
+
+事件循环的性能令人惊讶。当网络服务被设计成多线程时，只要你最终有几百个并发的连接，CPU 就会花费大量的时间进行任务切换，从而使你失去整体的性能。从一个线程切换到另一个线程的开销，在规模上会显著增大。当一个连接对应一个线程时，Apache 在几百个并发用户的时候就会被卡住，而 Node.js 基于事件循环和异步IO，可以扩展到 10 万个并发连接。
+
 ### 线程模型（Thread Model）
+
+Oz编程语言引入了数据流并发模型的概念，在 Oz 中，每当程序遇到一个未绑定的变量，它就会等待这个变量被 resolve。变量的这种数据流属性，有助于我们编写线程，这些线程通过在生产者-消费者模型中的流进行通信。基于并发模型的数据流最大的好处是确定性——相同的参数调用相同的方法总是会得到相同的结果。如果代码是没有副作用的，那么对并发编程进行推理就会很容易。
+
+Alice ML 是标准 ML 的一个变体，支持惰性计算，并发，分布式以及约束性编程。 Alice 的早期目标是重构 Oz 语言的功能。作为标准 ML 的一个变体，Alice 还通过使用 future 类型使得语言有了并发功能。Futures 在 Alice 中代表了一个并发操作中未确定的结果。Alice ML 中的 promise 是对 future 的显式处理。
+
+Alice 中的任何表达式都可以使用关键字 spawn 在自己的线程中进行计算。 spawn 总是返回 future，它被当作一个占位符。在 alice 中，future 可以被认为是功能线程，在某种意义上， 这种线程在 alice 中总是有一个结果。如果一个线程执行的操作需要 future 的值作为占位符，那么这个线程被称为 touching future。所有 touching 到 future 的线程都被阻塞，直到 future 被 resolve。如果一个线程引发了异常，这个future 就会failed，然后这个异常会在 touching 它的线程中重新引发。future 可以被当作一个值来传递。这有助于我们在ailce 中实现数据模型的并发。
+
+alice 还允许对表达式进行惰性计算。前面有 lazy 关键字表达式被认为是一个惰性 future。惰性 future 在需要是被计算。如果与并发或者惰性future 相关的计算以异常结束，则会产生一个failed future。请求一个 failed future 不会阻塞，它只是引发一个导致失败的异常。
 
 ## 隐式 vs 显式 Promises
 
+隐式 promise 是不需要手动触发计算，与显式 promise 相比，我们需要手动触发future 的 resolution，要么是调用一个函数，要么提供一个值。这种区别可以从触发计算的条件来理解。对于隐式 promise，promise 的创建同时也触发了计算，而对于显示 future，我们需要触发 promise 的 resolution。这个触发器可以是显式的，比如调用一个方法，也可以是隐式的，比如惰性计算。
+
+Baker和Hewitt的论文中介绍了显式 futures 的想法。它们的实现比较麻烦，需要底层语言的一些支持，因此它们并不常见。Baker和Hewitt的论文谈到了使用 future 作为函数参数的占位符，这些参数在需要时被并行计算。MultiLisp 也有一种机制，使用 defer 结构将 futures 的计算推迟到它的值第一次被使用的时候。Alice ML 中的 Lazy futures 也有类似的显式调用机制，第一个接触到future 的线程会触发其计算。
+
+一个显式 future 的例子是（来自AliceML）：
+
+```ML
+fun enum n = lazy n :: enum (n+1)
+```
+这个例子产生了一个无限的整数流，如果在创建时说明，这个数据流将争夺系统资源。
+
+隐式 futures 最初是由 Friedman 和 Wise 在 1978 年的一篇论文中提出的。那篇论文中提出的观点启发了 MultiLisp 中 promises 的设计。futures 在 Scala 和 JavaScript 中也是隐式的，它们在核心语言的基础上被支持为库。隐式 futures 可以用这种方式实现，因为它们不需要语言本身的支持。Alice ML 的并发 futures 也是隐式调用的一个例子。
+
+在 Scala 中，我们可以在进行 HTTP 请求时看到一个隐式 future 的例子。
+
+```Scala
+val f = Future {
+  Http("http://api.fixer.io/latest?base=USD").asString
+}
+
+f onComplete  {
+  case Success(response) => println(response.body)
+  case Failure(t) => println(t)
+}
+```
+一旦Future被创建，它就会发送HTTP调用。在 Scala 中，虽然 Futures 是隐式的，但 Promises 可以被用于类似显式的行为。这在我们需要堆积一些计算然后解决 Promise 的情况下很有用。
+
+```Scala
+val p = Promise[Foo]()
+
+p.future.map( ... ).filter( ... ) foreach println
+
+p.complete(new Foo)
+```
+
+在这里，我们创建一个 Promise，并在之后完成它。在创建和完成之间，我们堆积了一系列的计算，一旦 promise 完成，这些计算就会被执行。
+
 ## Promises pipeline
+
+对传统 RPC 系统的批评之一是它们是阻塞的。想象一下这样的场景：你需要调用一个API 'A' 和另一个 API 'B'，然后汇总这两个调用的结果，并将该结果作为参数用于另一个 API 'C'。现在，做这件事的逻辑方式是平行调用A和B，然后一旦两者都完成，就汇总结果并调用 C。不幸的是，在一个阻塞系统中，要做的是调用A，等待它完成，调用B，等待，然后汇总并调用C。即使有了异步性，要想线性地管理或扩展系统也变得有点困难。幸运的是，我们有 promises。
+
+![PNG06](/doc/illustrations/asynchronous/p-1.png)
+
+![PNG07](/doc/illustrations/asynchronous/p-2.png)
+
+Futures/Promises 可以被传递、等待，也可以被 chain 和连接在一起。这些属性有助于让使用它们的程序员的生活更轻松。这也减少了与分布式计算相关的延迟。Promises 实现了数据流并发，这也是确定性的，而且更容易推理。
+
+Promises pipeline 的历史可以追溯到 Argus 的调用流。在 Argus 中，调用流是分布式组件之间的一种通信机制。通信实体，即发送方和接收方，被一个流连接起来，发送方可以通过它向接收方进行调用。流可以被认为是 RPC，只是这些流允许调用者在处理调用时与接收者并行运行。在 Argus 中进行调用时，调用者会收到一个关于结果的Promises。在 Liskov 和 Shrira 的关于 Promises 的论文中，他们提到，在将 Promises 整合到调用流中后，下一个逻辑步骤就是谈论流的组成。这意味着将流安排成管道，一个流的输出可以作为下一个流的输入。他们谈到了使用 fork 和 coenter 来组成流。
+
+Joule 中的 Channel 是一个类似的想法，提供了一个连接接受器和分配器的通道。Joule 是 E 语言的直接祖先，并且更详细地谈到了它。
+
+```E
+t3 := (x <- a()) <- c(y <- b())
+
+t1 := x <- a()
+t2 := y <- b()
+t3 := t1 <- c(t2)
+```
+
+如果没有 E 中的流水线，这个调用将需要三次往返。首先向 x 发送a()，然后向 y 发送b()，最后向以 t2 为参数的结果 t1 发送c。但是有了流水线，后面的消息可以以前面的消息的结果作为参数，以 Promises 的方式发送。这使得所有的消息都可以一起发送，从而节省了昂贵的往返次数。这是假设 x 和 y 是在同一台远程机器上，否则我们仍然可以并行地评估 t1 和 t2。
+
+注意，这种管道机制与异步消息传递不同，因为在异步消息传递中，即使 t1 和 t2 被并行评估，为了解决 t3，我们仍然要等待 t1 和 t2 被resolve，并在另一个调用中再次发送给远程机器。
+
+现代的 promise 规范，如 JavaScript 中的方法，可以帮助我们更容易地进行 promise pipelining 工作。在JavaScript中，提供了一个Promise.all 方法，它接收一个迭代器并返回一个新的 Promise，当迭代器中的所有 Promise 都被解决时，该 Promise 就会被 resolve。还有一个 Promise.race 方法，它返回一个 Promise，当迭代表中的第一个 Promise 被解析时，这个 Promise 就会被resolve。下面是使用这些方法的例子：
+
+```js
+var p1 = Promise.resolve(1);
+var p2 = new Promise(function (resolve, reject) {
+  setTimeout(resolve, 100, 2);
+});
+
+Promise.all([p1, p2]).then(values => {
+  console.log(values); // [1,2]
+});
+
+Promise.race([p1, p2]).then(function(value) {
+  console.log(value); // 1
+});
+```
+在 Scala 中，futures 有一个 onSuccess 方法，作为 future 完成时的一个回调。这个回调本身可以用来依次将 futures 连锁起来。但这将导致更多的代码。幸运的是，Scala API 有组合器，可以更容易地组合futures 的结果。组合器的例子有 map, flatMap, filter, withFilter。
 
 ## 处理异常
 
+如果世界上的运行没有错误，我们会齐声欢呼，但在编程世界里，情况并非如此。当你运行一个程序时，你要么收到一个预期的输出，要么收到一个错误。错误可以被定义为错误的输出或一个异常。在同步编程模型中，处理错误的最合理的方式是 try...catch 块。
+
+```js
+try {
+  do something1;
+  do something2;
+  do something3;
+  // ...
+} catch (exception) {
+  HandleException;
+}
+```
+
+不幸的是，同样的事情并不能直接转化为异步代码。
+
+```js
+foo = doSomethingAsync();
+
+try {
+  foo();
+  // This doesn’t work as the error might not have been thrown yet
+} catch (exception) {
+  handleException;
+}
+```
+
+尽管大多数早期的论文都没有谈到错误处理，但 Liskov 和 Shrira 的论文确实承认在分布式环境中存在失败的可能性。从 Argus 的角度来看，"claim "操作会等待，直到 promise 就绪。然后，如果调用正常结束，它就正常返回，否则就发出适当的 "异常" 信号，比如说:
+
+```
+y: real := pt$claim(x)
+    except when foo: ...
+           when unavailable(s: string): .
+           when failure(s: string): . .
+    end
+```
+
+这里 x 是一个pt类型的 promise 对象；pi$claim 的形式说明了Argus通过将类型名称与操作名称相连接来识别一个类型的操作的方式。当出现通信问题时，Argus 的 RPC 会以 "不可用 Unavailable" 或 "失败 Failure" 的异常终止。
+
+* Unavailable 意味着问题是暂时的，例如，现在不可能进行通信。
+
+* Failure 意味着问题是永久性的，例如，处理程序的监护人不存在。
+
+因此，流调用（和发送）的回复由于流中断而丢失，将以这些异常中的一个终止。这两种异常都有一个字符串参数来解释失败的原因，例如，future("处理程序不存在")或 unavailable("无法通信")。由于任何调用都可能失败，每个处理程序都可以引发失败和不可用的异常。在这篇论文中，他们还谈到了从被调用程序到调用者的异常传播。在关于 E 语言的论文中，他们谈到了破碎的 promises 和将 promises 设置为破碎引用的异常。
+
 ### 现代的编程语言
+
+在 Scala 这样的现代语言中，promises 通常有两个回调。一个用于处理成功的情况，另一个用于处理失败的情况。
+
+```Scala
+f onComplete {
+  case Success(data) => handleSuccess(data)
+  case Failure(e) => handleFailure(e)
+}
+```
+
+在 Scala 中，Try 类型代表了一个计算，它既可能导致一个异常，也可能返回一个成功的计算值。例如，Try[Int] 代表一个计算，如果成功的话，可以得到 Int，如果有问题的话，则返回一个 Throwable。
+
+```Scala
+val a: Int = 100
+val b: Int = 0
+def divide: Try[Int] = Try(a/b)
+
+divide match {
+  case Success(v) =>
+    println(v)
+  case Failure(e) =>
+    println(e) // java.lang.ArithmeticException: / by zero
+}
+```
+
+Try类型可以是流水线式的，允许捕捉异常，并沿途恢复异常。
+
+在 JavaScript 中也可以看到类似的处理异常的模式。
+
+```js
+promise.then(function (data) {
+  // success callback
+  console.log(data);
+}, function (error) {
+  // failure callback
+  console.error(error);
+});
+```
+
+Scala futures 的异常处理:
+
+当异步计算抛出未处理的异常时，与这些计算相关的 futures 会失败。失败的 futures 会存储一个 Throwable 的实例而不是结果值。futures 提供了 onFailure 回调方法，它接受一个 PartialFunction 来应用于Throwable。TimeoutException、scala.runtime.NonLocalReturnControl[] 和 ExecutionException 异常的处理方式不同
+
+Scala promises 的异常处理: 
+
+当一个 promises 出现异常失败时，Throwable 的三种子类型会被特别处理。如果用于破坏 promises 的 Throwable 是 scala.runtime.NonLocalReturnControl，那么 promises 将以相应的值完成。如果用于破坏 promises 的 Throwable 是 Error、InterruptedException 或 scala.util.control.ControlThrowable 的实例，那么 Throwable 将被包装成新的 ExecutionException 的原因，而这个新的 ExecutionException 又会使 promises 失败。
+
+
+为了处理异步方法和回调的错误，错误优先的回调风格（我们以前见过，也被 Node.js 采用）是最常见的惯例。虽然这很有效，但它的可组合性不强，最终将我们带回了所谓的回调地狱。幸运的是，Promises 允许异步代码应用结构化的错误处理。Promises.then 方法接收了两个回调，一个是onFulfilled，用于处理 Promises 被成功解决的情况，另一个是onRejected，用于处理 Promises 被拒绝的情况。
+
+```js
+var p = new Promise(function(resolve, reject) {
+  resolve(100);
+});
+
+p.then(function(data) {
+  console.log(data); // 100
+}, function(error) {
+  console.err(error);
+});
+
+var q = new Promise(function(resolve, reject) {
+  reject(new Error(
+    {'message':'Divide by zero'}
+  ));
+});
+
+q.then(function(data) {
+  console.log(data);
+}, function(error) {
+  console.err(error); // {'message':'Divide by zero'}
+});
+```
+
+Promises 也有一个catch方法，其工作方式与 onFailure 回调相同，但也有助于处理组合中的错误。Promises 中的异常行为与同步代码块中的异常行为相同：它们跳到最近的异常处理程序。
+
+```js
+function work(data) {
+  return Promise.resolve(data + "1");
+}
+
+function error(data) {
+  return Promise.reject(data + "2");
+}
+
+function handleError(error) {
+  return error + "3";
+}
+
+work("")
+  .then(work)
+  .then(error)
+  .then(work) // this will be skipped
+  .then(work, handleError)
+  .then(check);
+
+function check(data) {
+  console.log(data == "1123");
+  return Promise.resolve();
+}
+```
+
+同样的行为也可以用 catch 块来写。
+
+```js
+work("")
+  .then(work)
+  .then(error)
+  .then(work)
+  .catch(handleError)
+  .then(check);
+
+function check(data) {
+  console.log(data == "1123");
+  return Promise.resolve();
+}
+```
 
 ## 行动中的 Futures 和 Promises
 
 ### Twitter Finagle
 
+Finagle 是一个适用于 JVM 的协议无关的异步 RPC 系统，它使在 Java、 Scala 或任何其他 JVM 语言中建立强大的客户端和服务器变得容易。它使用 Futures 来封装并发的任务。Finagle 引入了另外两个建立在 Futures 之上的抽象，用于推理分布式软件。
+
+* Services 是代表系统边界的异步函数。
+
+* Filters 是独立于应用程序的逻辑块，如处理超时和认证。
+
+在Finagle中，操作描述了需要做的事情，而实际执行则由运行时来处理。运行时带有连接池、故障检测和恢复以及负载平衡器的强大实现。
+
+一个 Service 的例子:
+
+```java
+val service = new Service[HttpRequest, HttpResponse] {
+  def apply(request: HttpRequest) =
+    Future(new DefaultHttpResponse(HTTP_1_1, OK))
+}
+```
+timeout filter 可以实现为：
+
+```scala
+def timeoutFilter(d: Duration) = { 
+  (req, service) => service(req).within(d)
+}
+```
+
 ### 可矫正性（correctables）
 
-### 傻瓜式 futures
+Correctables 是由 Rachid Guerraoui、Matej Pavlovic 和Dragos-Adrian Seredinschi 在 OSDI '16 上介绍的，论文题目是Incremental Consistency Guarantees for Replicated Objects。如标题所示，Correctables 旨在解决复制对象的一致性问题。它们通过捕捉复制对象的值的连续变化来提供增量一致性保证。如果最终的一致性可以接受，应用程序可以选择接收一个快速但可能不一致的结果，或者等待一个强一致性的结果。Correctables API 从 Promises 的 API 中获得了灵感，并建立在其基础上。Promises 有两个状态模型来表示一个异步任务，它从阻塞状态开始，当值可用时进入准备状态。这不能代表 correctables 程序的增量性质。相反，Correctables 在开始时有一个更新状态。从那时起，它们在中间更新期间保持更新状态，当最终结果可用时，它们过渡到最终状态。如果在这中间发生了错误，它们会进入错误状态。每个状态的改变都会触发一个回调。
+
+![PNG08](/doc/illustrations/asynchronous/15.png)
+
+### 傻瓜式（Folly） futures
+
+Folly 是 Facebook 为异步 C++ 开发的一个库，其灵感来自 Twitter 为 Scala 实现的 Futures。它建立在 C++11 标准中的 Futures 之上。与 Scala 的 Futures 一样，它们也允许实现一个自定义的执行器，提供不同的 Future 运行方式（线程池、事件循环等）。
 
 ### Node.js Fibers(纤程)
+
+Fibers 为 V8 和 Node.js 提供了协同程序支持。应用程序可以使用Fibers 来允许用户在不使用大量回调的情况下编写代码，而不牺牲异步 IO 的性能优势。把 Fibers 想象成 Node.js 的轻量级线程，其中的调度权在程序员手中。node-fibers 库不建议在没有任何抽象的情况下一起使用原始 API 和代码，它提供了一个 Futures 的实现 "fiber-aware"。
+
+通过www.DeepL.com/Translator（免费版）翻译
 
 Java Asynchronous：
 https://juejin.cn/post/6970558076642394142
@@ -209,3 +582,9 @@ https://devblogs.microsoft.com/premier-developer/dissecting-the-async-methods-in
 https://devblogs.microsoft.com/dotnet/configureawait-faq/
 
 https://vkontech.com/exploring-the-async-await-state-machine-nested-async-calls-and-configureawaitfalse/
+
+JavaScript Asynchronous：
+
+Python Asynchronous：
+
+Go Asynchronous：
