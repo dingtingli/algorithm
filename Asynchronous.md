@@ -584,6 +584,8 @@ https://devblogs.microsoft.com/dotnet/configureawait-faq/
 https://vkontech.com/exploring-the-async-await-state-machine-nested-async-calls-and-configureawaitfalse/
 
 JavaScript Asynchronous：
+https://stackoverflow.com/questions/42412145/what-is-a-state-machine-in-terms-of-javascript-promises-and-c-sharp-asyc-await
+
 
 Python Asynchronous：
 
