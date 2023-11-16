@@ -21,7 +21,7 @@
 
 合并过程包括对两个数组的头部元素进行比较，并将较小的元素移至新数组中。这个过程持续进行，直到所有元素都被合并进新数组，形成一个完全有序的数组。
 
-![动图 归并排序 合并过程](./illustrations/mergesort/mergesort01.gif)
+![动图 归并排序 合并过程](/doc/illustrations/mergesort/mergesort01.gif)
 
 ```python
 def merge(arr, left, mid, right):
@@ -74,15 +74,15 @@ def merge(arr, left, mid, right):
 
 例如，一个含有 8 个元素的数组会被分成两个各含 4 个元素的子数组。这个拆分过程一直持续，直到子数组不能再被分割，也就是说，每个子数组只含有一个元素。
 
-![分割子数组](./illustrations/mergesort/mergesort02.png)
+![分割子数组](/doc/illustrations/mergesort/mergesort02.png)
 
 由于单个元素本身就是有序的，因此当两个子数组各自只含有一个元素时，我们可以利用之前的合并方法，将它们合并成一个含有两个元素的有序数组。这个过程持续下去，最终我们可以回答最初的问题：原数组的两个子数组是如何完成排序的。
 
-![合并子数组](./illustrations/mergesort/mergesort03.png)
+![合并子数组](/doc/illustrations/mergesort/mergesort03.png)
 
 我们通过递归的方式，来实现上述步骤，最终形成完整的归并排序过程。
 
-![动图 归并排序的实现](./illustrations/mergesort/mergesort04.gif)
+![动图 归并排序的实现](/doc/illustrations/mergesort/mergesort04.gif)
 
 ```python
 def merge_sort(arr, left, right):
@@ -114,7 +114,7 @@ def merge_sort(arr, left, right):
 
 在归并排序中，分割步骤将大问题简化为多个小问题，而合并步骤则解决这些小问题并逐步构建出最终问题的解决方案。而解决步骤，由于单个元素本身就是有序的，所以隐式地完成了。
 
-![分治 归并排序](./illustrations/mergesort/mergesort05.png)
+![分治 归并排序](/doc/illustrations/mergesort/mergesort05.png)
 
 分治思想不仅局限于排序算法，它还广泛应用于其他领域，例如 Google 的 MapReduce，它将大规模数据处理任务分配到多台服务器上，然后将各服务器的中间结果汇总到特定服务器上以得到最终结果。
 
@@ -122,7 +122,7 @@ def merge_sort(arr, left, right):
 
 归并排序的时间复杂度为 O(nlogn)，但由于合并阶段需要临时存储空间来保存中间结果，导致其空间复杂度为 O(n)。对于长度为 n 的数组，所需的临时空间大小与数组长度相同。
 
-![归并排序 合并过程的临时空间](./illustrations/mergesort/mergesort06.png)
+![归并排序 合并过程的临时空间](/doc/illustrations/mergesort/mergesort06.png)
 
 *注意：如果对于 O(nlogn) 的算法复杂度不太清楚，可以回顾之前的文章：为什么排序算法的时间复杂度上限是O(n log n)。*
 
@@ -138,7 +138,7 @@ def merge_sort(arr, left, right):
 
 现在，我们只需要分配一个大小为 2 的临时数组，将 [6, 10] 复制到其中，然后在原数组中将它们与 [4, 5, 7, 9] 合并。
 
-![动图 归并排序 优化合并过程](./illustrations/mergesort//mergesort07.gif)
+![动图 归并排序 优化合并过程](/doc/illustrations/mergesort//mergesort07.gif)
 
 我们可以总结归并算法的优化策略：
 1. 执行一个二分查找，找到第二个数组中的第一个元素将被插入到第一个数组的位置，以保持其有序性。
@@ -149,7 +149,7 @@ def merge_sort(arr, left, right):
 
 上面的示例展示了从前往后合并的过程，下面的示例演示了另一种情况，即从后往前合并的过程。
 
-![动态图 归并排序 从后往前合并](./illustrations/mergesort/mergesort08.gif)
+![动态图 归并排序 从后往前合并](/doc/illustrations/mergesort/mergesort08.gif)
 
 与传统归并排序相比，这种优化方法减少了元素移动的次数，缩短了运行时间，并减少了临时空间的占用。
 
