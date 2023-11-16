@@ -1,17 +1,4 @@
-# 什么是大 O
-
-1. 无穷大
-2. 趋势变化（阶 / 求导）
-3. 大 O 的数学意义（渐进上界）
-4. 计算运行的次数
-5. 高德纳算法分析方式
-6. 算法复杂度意义
-7. 常见的算法复杂的（log）
-
-https://home.csulb.edu/~tebert/teaching/lectures/328/bigO/bigO.pdf
-https://tandy.cs.illinois.edu/big-oh.pdf
-
----
+# 什么是大 O？
 
 学过算法的朋友，对大 O（Big O）这个概念应该不陌生，它是用于计算算法复杂度的方法。
 
@@ -278,6 +265,9 @@ WWH 系列文章列表：
 
 [2] [What - What - 什么是依赖注入💉？](https://mp.weixin.qq.com/s?__biz=MzI5NjA1MDQ4NA==&mid=2454608405&idx=1&sn=5237d417b8a7d26ff11a7fea13c42f3d&chksm=fbf0b04ecc873958d4c0764d0bf2552da9ebd36cac39b4222af1c47fcca562b8a772561146fb&token=973806712&lang=zh_CN#rd)
 
-![](https://mmbiz.qpic.cn/sz_mmbiz_jpg/FePLEP26kHKMviaiawjFUXE71lZkHR5xf1GdHb3cedw6O5onricJIMawslyoaJicOeMyyJlAjOyFiadXIzFyx0sQHlA/640?wx_fmt=jpeg&wxfrom=5&wx_lazy=1&wx_co=1)
+参考资料：
 
+[1] https://home.csulb.edu/~tebert/teaching/lectures/328/bigO/bigO.pdf
+
+[2] https://tandy.cs.illinois.edu/big-oh.pdf
 
