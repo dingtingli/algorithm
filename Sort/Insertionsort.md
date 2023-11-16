@@ -4,7 +4,7 @@
 
 在插入排序中，初始状态下我们假定数组的第一个元素是已排序的，从第二个元素开始，将每个元素依次插入到正确的位置，重复这个过程，直至数组完全有序。
 
-![动图 插入排序](./illustrations//Insertionsort/insertionsort01.gif)
+![动图 插入排序](/doc/illustrations/Insertionsort/insertionsort01.gif)
 
 插入排序操作的核心在于两点：**比较**和**移动**。
 
@@ -18,7 +18,7 @@
 
 然而，在最佳情况下，即数组已经有序，插入排序则非常高效，每次仅需进行一次比较，总比较次数为 `n-1` 次，复杂度为 `O(n)`，而且无需移动任何元素。
 
-![算法复杂度 O(n^2) O(nlogn) O(n)](./illustrations//Insertionsort/insertionsort09.png)
+![算法复杂度 O(n^2) O(nlogn) O(n)](/doc/illustrations//Insertionsort/insertionsort09.png)
 
 ## 插入排序优势
 
@@ -48,17 +48,17 @@ def insertion_sort(arr):
 
 这个结论初看上去不太好理解，我们考虑一个数组 `[4,2,3,1]`，从中可以找出以下六个数据对：`(4,2)`，`(4,3)`，`(4,1)`，`(2,3)`，`(2,1)`，`(3,1)`。
 
-![动图 数据对](./illustrations//Insertionsort/insertionsort03.gif)
+![动图 数据对](/doc/illustrations//Insertionsort/insertionsort03.gif)
 
 在这些数据对中，除了 `(2,3)` 是正序对之外，其他都是逆序对。
 
-![动图 正序对和逆序对](./illustrations//Insertionsort/insertionsort04.gif)
+![动图 正序对和逆序对](/doc/illustrations//Insertionsort/insertionsort04.gif)
 
 - 当数字 `2` 被处理时，它移动到 `4` 的前面，消除了逆序对 `(4,2)`。
 - 当数字 `3` 被处理时，它移动到 `4` 的前面，消除了逆序对 `(4,3)`
 - 当数字 `1` 被处理时，它移动到每一个数字的前面，消除了逆序对 `(4,1)`、`(3,1)` 和 `(2,1)`。
 
-![动图 移动减少倒序对](./illustrations//Insertionsort/insertionsort05.gif)
+![动图 移动减少倒序对](/doc/illustrations//Insertionsort/insertionsort05.gif)
 
 每次移动都改变了两个逆序的元素的位置，相当于减少了一个逆序对。
 
@@ -76,7 +76,7 @@ def insertion_sort(arr):
 
 尽管如此，对于小规模的数据集而言，这样的优化是有益的，可以明显提高排序效率。
 
-![动图 二分查找插入位置](./illustrations//Insertionsort/insertionsort06.gif)
+![动图 二分查找插入位置](/doc/illustrations//Insertionsort/insertionsort06.gif)
 
 插入排序的一个重要特性是其稳定性。例如，在序列 `[4a, 4b, 3, 5]` 中，即使 `4a` 和 `4b` 的值相等，它们在排序后也应保持原有顺序。
 
