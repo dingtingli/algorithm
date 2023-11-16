@@ -42,6 +42,8 @@ def insertion_sort(arr):
         arr[j + 1] = val  # insert
 ```
 
+源代码：[insertionsort01](/Code/insertionsort01.py)
+
 ## 插入排序中确定的移动次数
 
 这里有一个有趣的结论：插入排序中移动元素的次数与数组中逆序对的数量相等。
@@ -101,7 +103,7 @@ def binary_search(arr, val, start, end):
 
     return start
 
-def insertionSort(arr):
+def insertion_sort(arr):
     for i in range(1, len(arr)):
         selected = arr[i]
         j = i - 1
@@ -115,6 +117,9 @@ def insertionSort(arr):
             j -= 1
         arr[j + 1] = selected
 ```
+
+源代码：[insertionsort02](/Code/insertionsort02.py)
+
 
 ## 总结
 
