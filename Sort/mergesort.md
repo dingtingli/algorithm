@@ -82,7 +82,7 @@ def merge(arr, left, mid, right):
 
 我们通过递归的方式，来实现上述步骤，最终形成完整的归并排序过程。
 
-![动图 归并排序的实现](/doc/illustrations/mergesort/mergesort04.gif)
+![动图 归并排序的实现](/doc/illustrations/mergesort/mergesort0401.gif)
 
 ```python
 def merge_sort(arr, left, right):
