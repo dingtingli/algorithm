@@ -10,6 +10,8 @@
 
 2. [归并排序（Merge Sort）：一个被所有教科书嫌弃的算法，我们为什么还要学？](./Sort/mergesort.md)
 
+3. [归并排序的历史：冯·诺依曼的第一个计算机程序](./Sort/mergesort%20history.md)
+
 **更多内容可以关注我的公众号：dingtingli**
 
 <figure>
