@@ -8,9 +8,11 @@
 
 1. [插入排序（Insertion Sort）：使用频率最高的排序算法](./Sort/Insertionsort.md)
 
-2. [归并排序（Merge Sort）：一个被所有教科书嫌弃的算法，我们为什么还要学？](./Sort/mergesort.md)
+2. [归并排序的历史：冯·诺依曼的第一个计算机程序](./Sort/mergesort%20history.md)
 
-3. [归并排序的历史：冯·诺依曼的第一个计算机程序](./Sort/mergesort%20history.md)
+3. [归并排序（Merge Sort）：一个被所有教科书嫌弃的算法，我们为什么还要学？](./Sort/mergesort.md)
+
+4. [快速排序（Quick Sort）：分治策略在排序算法中的高效实现](./Sort/quicksort.md)
 
 **更多内容可以关注我的公众号：dingtingli**
 
