@@ -12,7 +12,7 @@
 
 3. [归并排序（Merge Sort）：一个被所有教科书嫌弃的算法，我们为什么还要学？](./Sort/mergesort.md)
 
-4. [快速排序（Quick Sort）：分治策略在排序算法中的高效实现](./Sort/quicksort.md)
+4. [快速排序（Quick Sort）：快的原因，分治策略加双指针遍历](./Sort/quicksort.md)
 
 **更多内容可以关注我的公众号：dingtingli**
 
