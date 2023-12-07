@@ -37,10 +37,11 @@ def quicksort(A, lo, hi):
     M = 5
     if hi <= lo + M:
         insertionsort(A, lo, hi)
-    if lo < hi:
-        pivot_index = partition(A, lo, hi)
-        quicksort(A, lo, pivot_index - 1)
-        quicksort(A, pivot_index + 1, hi)
+        return
+
+    pivot_index = partition(A, lo, hi)
+    quicksort(A, lo, pivot_index - 1)
+    quicksort(A, pivot_index + 1, hi)
 
 
 arr = [4, 2, 6, 5, 3, 9, 7]
