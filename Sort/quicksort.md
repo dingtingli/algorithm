@@ -106,7 +106,7 @@ def quicksort(A, lo, hi):
 
 注意：你可以在我的 github 仓库中查看源代码 [quicksort01](/Code/quicksort01.py)
 
-### 双指针遍历
+## 双指针遍历
 
 在划分过程中，我们采用了双指针技术，这是一种常见的算法策略。该技巧有以下常见步骤和策略：
 
@@ -214,7 +214,11 @@ def partition(arr, low, high):
 
 ![动图 划分扫描过程 1](/doc/illustrations//Quicksort/quicksort05.gif)
 
+你可以在我的 github 仓库中查看源代码 [quicksort01](/Code/quicksort01.py)
+
 ![动图 划分扫描过程 2](/doc/illustrations//Quicksort/quicksort14.gif)
+
+你可以在我的 github 仓库中查看源代码 [quicksort02](/Code/quicksort02.py)
 
 这两种策略都使用了固定元素作为支点（pivot）。对于随机输入的数据，这样的方法通常都能取得良好的效果。
 
@@ -238,6 +242,7 @@ def media_three(arr, lo, mid, hi):
     else:
         return hi
 ```
+
 注意：你可以在我的 github 仓库中查看源代码 [quicksort03](/Code/quicksort03.py)
 
 ## 优化策略2：混合使用插入排序
@@ -256,12 +261,22 @@ def media_three(arr, lo, mid, hi):
 
 ```python
 def quicksort(A, lo, hi):
+    M = 5
     if hi <= lo + M:
         insertionsort(A, lo, hi)
-    if lo < hi:
-        pivot_index = partition(A, lo, hi)
-        quicksort(A, lo, pivot_index - 1)
-        quicksort(A, pivot_index + 1, hi)
+        return
+
+    pivot_index = partition(A, lo, hi)
+    quicksort(A, lo, pivot_index - 1)
+    quicksort(A, pivot_index + 1, hi)
 ```
 
 注意：你可以在我的 github 仓库中查看源代码 [quicksort04](/Code/quicksort04.py)
+
+## 总结
+
+快速排序之所以名副其实地“快速”，归功于它独特的算法设计。这种排序方法综合了分治策略和双指针遍历技术，使其在各种情况下都能高效地工作。
+
+通过详细探讨快速排序的各个方面，包括其基本原理、划分策略、双指针遍历，以及优化技巧，我们可以更深刻地理解这一算法的精妙之处。
+
+这些方法的结合不仅提升了算法的效率，还保证了其在各种场景下的适应性和稳定性。因此，无论是在理论上还是在实际应用中，都值得我们深入学习和应用。
