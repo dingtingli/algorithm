@@ -14,6 +14,8 @@
 
 4. [快速排序（Quick Sort）：为什么快？分治策略加双指针遍历](./Sort/quicksort.md)
 
+5. [堆排序（Heap Sort）：我们学习它可能并不是为了用来排序](./Sort/heapsort.md)
+
 **更多内容可以关注我的公众号：dingtingli**
 
 <figure>
