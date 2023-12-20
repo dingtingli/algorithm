@@ -4,7 +4,7 @@
 
 二叉树（Binary tree）是一种特殊的数据结构。在这种结构中，每个节点都有两个子节点，通常被称为“左子树”和“右子树”。
 
-![二叉树](/doc/illustrations//Heapsort/heapsort01.png)
+![二叉树](/doc/illustrations/heapsort/heapsort01.png)
 
 在这种数据结构中，每个节点都有指向其父节点、左右子节点的三个指针。
 
@@ -13,13 +13,13 @@
 - 除最底层外，其他层的节点数均已满。
 - 最底层的节点都集中在左侧。
 
-![完全二叉树](/doc/illustrations//Heapsort/heapsort02.png)
+![完全二叉树](/doc/illustrations/heapsort/heapsort02.png)
 
 与普通的二叉树不同，完全二叉树可以使用数组进行隐式表示，无需使用指针。
 
 这种表示方法是将树上的所有节点按顺序存放在数组中。节点间的关系可以通过其在数组中的位置来确定。
 
-![完全二叉树数组结构](/doc/illustrations//Heapsort/heapsort03.png)
+![完全二叉树数组结构](/doc/illustrations/heapsort/heapsort03.png)
 
 例如，根节点存放在数组的第 `1` 位置，其左右子节点分别位于 `2` 和 `3` 位置。对于任意位置 `i` 的节点，其父节点和子节点的位置可以通过以下公式计算：
 
@@ -31,11 +31,11 @@
 
 其中，Parent 表示节点 `i` 的父节点位置，Left 和 Right 分别表示其左子节点和右子节点的位置。
 
-![完全二叉树数组节点公式](/doc/illustrations//Heapsort/heapsort05.png)
+![完全二叉树数组节点公式](/doc/illustrations/heapsort/heapsort05.png)
 
 以图中的数组为例，当 `i=4` 时，我们可以直接计算出其父节点和两个子节点的位置。
 
-![完全二叉树数组节点 i=4](/doc/illustrations//Heapsort/heapsort04.png)
+![完全二叉树数组节点 i=4](/doc/illustrations/heapsort/heapsort04.png)
 
 最后，我们来思考一个问题：
 
@@ -47,7 +47,7 @@
 
 **每个父节点的值都大于或等于其子节点的值。** 这意味着在堆的数组表示中，最大的元素总是位于根节点。
 
-![最大堆](/doc/illustrations//Heapsort/heapsort06.png)
+![最大堆](/doc/illustrations/heapsort/heapsort06.png)
 
 这种堆被称为最大堆（Max Heap）。而如果每个父节点的值都小于或等于其子节点，那么这样的堆就是最小堆（Min Heap）。
 
@@ -57,13 +57,13 @@
 
 当一个子节点的值大于其父节点，这就违反了最大堆的特性。此时，我们需要交换这两个节点。
 
-![动图 节点交换](/doc/illustrations//Heapsort/heapsort07.gif)
+![动图 节点交换](/doc/illustrations/heapsort/heapsort07.gif)
 
 如果一个节点的左右子树都是最大堆，但该节点的值小于其子节点，该如何操作？
 
 例如，节点 `i` 的左右子树都是最大堆，但节点 `i` 的值小于其子节点。为了解决这个问题，我们可以让节点 `i` 在堆中“逐级下降”，直至找到合适的位置。
 
-![动图 堆中节点逐级下降](/doc/illustrations//Heapsort/heapsort08.gif)
+![动图 堆中节点逐级下降](/doc/illustrations/heapsort/heapsort08.gif)
 
 将上述的“逐级下降”过程转化为代码是一个有趣的挑战，你可以先思考一下如何实现。文章末尾是我为维护最大堆特性编写的函数，以供参考。
 
@@ -119,7 +119,7 @@ def exch(a, i, j):
 
 回顾上一篇文章，最大的贡献就是实现了维护最大堆特性的 `MAXHEAPIFY` 函数。
 
-![动图 逐级下降维护最大堆](/doc/illustrations//Heapsort/heapsort08.gif)
+![动图 逐级下降维护最大堆](/doc/illustrations/heapsort/heapsort08.gif)
 
 所以问题的答案是：我们可以从数组的最后一个父节点开始，自底向上地使用维护堆特性的 `MAXHEAPIFY` 函数，从而将任意排序的数组转换成最大堆。
 
@@ -135,11 +135,11 @@ def exch(a, i, j):
 
 因此，完全二叉树的最后一个父节点的位置为 `n/2`。
 
-![完全二叉树的最后一个父节点](/doc/illustrations//Heapsort/heapsort09.png)
+![完全二叉树的最后一个父节点](/doc/illustrations/heapsort/heapsort09.png)
 
 接下来，我们从最后一个父节点开始，自底向上地对每个父节点调用维护堆特性的 `MAXHEAPIFY` 函数。这样，我们可以逐步将任意排序的数组转换为满足最大堆特性的数组。
 
-![动图 建立最大堆](/doc/illustrations//Heapsort/heapsort10_1.gif)
+![动图 建立最大堆](/doc/illustrations/heapsort/heapsort10_1.gif)
 
 如何将这个过程转化为代码呢？你可以先尝试自己实现，然后再参考下面的函数：
 
@@ -164,7 +164,7 @@ def BUILDMAXHEAP(a):
 
 回顾最大堆的核心特性：每个父节点的值都大于或等于其子节点的值。 这确保了在堆的数组表示中，最大的元素始终位于根节点。
 
-![最大堆示意图](/doc/illustrations//Heapsort/heapsort11.png)
+![最大堆示意图](/doc/illustrations/heapsort/heapsort11.png)
 
 现在，我们将利用这个特性和 `BUILDMAXHEAP` 函数来实现堆排序。
 
@@ -174,13 +174,13 @@ def BUILDMAXHEAP(a):
 
 3. **重建最大堆：** 排除最后一个元素，并在剩余的元素中重新构建最大堆。
 
-![动图 重建最大堆示意图](/doc/illustrations//Heapsort/heapsort12.gif)
+![动图 重建最大堆示意图](/doc/illustrations/heapsort/heapsort12.gif)
 
 1. **重复上述过程：** 继续交换、排除和重建，直到堆的大小为 2。
 
 因为对于只有两个节点的堆，我们可以直接通过 `MAXHEAPIFY` 函数完成排序，再进一步交换即可完成排序。
 
-![动图 堆排序过程示意图](/doc/illustrations//Heapsort/heapsort13.gif)
+![动图 堆排序过程示意图](/doc/illustrations/heapsort/heapsort13.gif)
 
 如何将上述过程转化为代码呢？以下是我为堆排序编写的函数，你可以先尝试自己实现，然后再参考：
 
@@ -222,7 +222,7 @@ def HEAPSORT(a):
     b. 如果该数小于堆顶元素，移除堆顶元素，并将新数加入堆中。
 3. 读完文件后，堆中的100万个数即为所需的最小的100万个数。
 
-![动图 优先队列过程示意图](/doc/illustrations//Heapsort/heapsort16.gif)
+![动图 优先队列过程示意图](/doc/illustrations/heapsort/heapsort16.gif)
 
 这种利用最大堆来找出最小的N个数的方法，实际上就是利用了一种叫做“优先队列”的数据结构。
 
@@ -365,7 +365,7 @@ def MAXHEAPINSERT(a, key):
 
 堆排序（HEAPSORT）虽然在理论上很吸引人，但在实际应用中，其比较计数的效率并不高。原因在于它将元素从堆的底部提升到顶部，然后再让它们逐渐下沉，与较大的元素交换位置。
 
-![动图 重建最大堆示意图](/doc/illustrations//Heapsort/heapsort12.gif)
+![动图 重建最大堆示意图](/doc/illustrations/heapsort/heapsort12.gif)
 
 这种做法似乎有些反直觉：为什么要将一个可能很小的元素放在可能很大的元素之上，然后再观察其下沉的过程呢？难道就没有更优雅的方法，直接将两个子堆中的较大元素提升到堆的顶部吗？
 
@@ -380,7 +380,7 @@ def MAXHEAPINSERT(a, key):
 5. 转到步骤 2
 
 
-![动图 快速堆排序示意图](/doc/illustrations//Heapsort/heapsort14.gif)
+![动图 快速堆排序示意图](/doc/illustrations/heapsort/heapsort14.gif)
 
 这种方法的优势在于，我们实际上是将一个已知较大的元素提升到堆顶，无需进行额外的比较。
 
