@@ -107,6 +107,8 @@ def exch(a, i, j):
     a[i - 1], a[j - 1] = a[j - 1], a[i - 1]
 ```
 
+源代码：[heapsort01](/Code/heapsort01.py)
+
 在上一篇文章中，我们提到了从数组的第 `1` 位置开始存储完全二叉树的节点，而传统数组索引是从 `0` 开始。这个问题的答案其实隐藏在 `less` 和 `exch` 函数中。
 
 通过调整索引 `i - 1` 和 `j - 1`，我们实现了从 `1` 开始的直观存储方式，同时避免了浪费数组的第 `0` 位置。
@@ -154,6 +156,8 @@ def BUILDMAXHEAP(a):
         i -= 1
 ```
 
+源代码：[heapsort01](/Code/heapsort01.py)
+
 在这篇文章中，我们学习了如何从一个随机数组构建最大堆。通过自底向上的方法和调用维护堆特性的 `MAXHEAPIFY` 函数，我们可以有效地将任意数组转化为最大堆。
 
 在下篇文章中，我们将进一步探讨如何利用最大堆。
@@ -197,6 +201,8 @@ def HEAPSORT(a):
         # Step 3: Rebuild the max heap
         MAXHEAPIFY(a, 1, n)
 ```
+
+源代码：[heapsort01](/Code/heapsort01.py)
 
 尽管堆排序在理论上很有吸引力，但在实际应用中，它往往不如快速排序高效。
 
@@ -361,6 +367,8 @@ def MAXHEAPINSERT(a, key):
 
 ```
 
+源代码：[heapsort02](/Code/heapsort02.py)
+
 ## 6. 快速堆排序
 
 堆排序（HEAPSORT）虽然在理论上很吸引人，但在实际应用中，其比较计数的效率并不高。原因在于它将元素从堆的底部提升到顶部，然后再让它们逐渐下沉，与较大的元素交换位置。
@@ -429,3 +437,5 @@ def FASTMAXHEAPIFY(a, i, n):
         exch(a, i, largest)
         i = largest
 ```
+
+源代码：[heapsort03](/Code/heapsort03.py)
