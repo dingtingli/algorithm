@@ -149,7 +149,7 @@ def merge_sort(arr, left, right):
 
 上面的示例展示了从前往后合并的过程，下面的示例演示了另一种情况，即从后往前合并的过程。
 
-![动态图 归并排序 从后往前合并](/doc/illustrations/mergesort/mergesort08.gif)
+![动图 归并排序 从后往前合并](/doc/illustrations/mergesort/mergesort08.gif)
 
 与传统归并排序相比，这种优化方法减少了元素移动的次数，缩短了运行时间，并减少了临时空间的占用。
 
