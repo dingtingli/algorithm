@@ -56,7 +56,7 @@ EDVAC 采用了冯·诺依曼架构，这种设计与现代计算机架构类似
 
 ![IBM Collators](/doc/illustrations/mergesort/mergesorthistory03.jpg)
 
-[计算机诞生之前，数据如何排序？](./done%20-%20IBM%20PunchCard%20Sort.md)
+[计算机诞生之前，数据如何排序？](./IBMpunchcardsort.md)
 
 **冯·诺伊曼选择排序作为主题，目的是为了比较计算机执行这些算法所需的时间与 IBM 的专用排序机的处理速度。**
 
