@@ -20,7 +20,7 @@
 
 6. [一个游戏让你理解二分法的本质](./Sort/guessgame.md)
 
-7. [一个游戏让你理解三分法的本质](./Sort/weightingproblem.md)
+7. [还是一个游戏，让你理解三分法的本质](./Sort/weightingproblem.md)
 
 **更多内容可以关注我的公众号：dingtingli**
 
