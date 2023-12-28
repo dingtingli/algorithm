@@ -41,11 +41,11 @@
 
 我们用 + 表示球重，用 - 表示球轻。
 
-![轻或重](./illustrations/weight01.PNG)
+![轻或重](/doc/illustrations/weightingproblem/weight01.PNG)
 
 24 种可能的解空间。
 
-![解空间 24 种可能](./illustrations/weight02.PNG)
+![解空间 24 种可能](/doc/illustrations/weightingproblem/weight02.PNG)
 
 ### 基于问题特性减小解空间
 
@@ -57,7 +57,7 @@
 
 也就是说，每次都可以将解空间的可能性减小 1/3。那么“最少需要多少次称重”的问题就变为：“3 的多少次方 >=24 且最接近 24？”
 
-![最少需要多少次称重](./illustrations/weighting07.png)
+![最少需要多少次称重](/doc/illustrations/weightingproblem/weight07.PNG)
 
 答案是 3 次，因为 3^`3` = 27，最接近 24。也就是说最少称重 3 次，就可以找出假球。
 
@@ -75,7 +75,7 @@
 
 - 若右边更重，则与左边更重的情况恰好相反。这时可能的情况是假球重且位于 B 组中，解空间标记为“5+、6+、7+、8+”，或者假球轻且位于 A 组中，解空间标记为“1-、2-、3-、4-”。
 
-![第一步](./illustrations/weight03.PNG)
+![第一步](/doc/illustrations/weightingproblem/weight03.PNG)
 
 仅通过一次称重，我们就已经将解空间三等分，每等分只要 8 (24 除以 3) 种可能的解空间。
 
@@ -91,7 +91,7 @@
 
 - 若右边更重，那么假球可能较重并位于“3+，4+”中，或者假球较轻，正是“6-”。
 
-![第二步](./illustrations/weight04.PNG)
+![第二步](/doc/illustrations/weightingproblem/weight04.PNG)
 
 此轮称重后，我们又进一步缩小了假球的潜在范围。
 
@@ -107,7 +107,7 @@
 
 - 若右侧更重，那么可以确定假球是重的，“2+”。
 
-![第三步](./illustrations/weight05.PNG)
+![第三步](/doc/illustrations/weightingproblem//weight05.PNG)
 
 只需三次称重，我们便锁定了那颗不合群的假球。
 
@@ -115,7 +115,7 @@
 
 尽管我们上文中每次只走了其中一条分支，但三次称重后的所有可能答案，都在下图中清晰地展示。
 
-![称球问题图解](./illustrations/weight06.PNG)
+![称球问题图解](/doc/illustrations/weightingproblem/weight0601.PNG)
 
 ## 总结
 
