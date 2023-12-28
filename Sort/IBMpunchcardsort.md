@@ -16,7 +16,7 @@
 
 于是，打孔机应运而生，为数据处理提供了巨大的便利。
 
-![IBM 29 Card Punch](./illustrations/IBM04.PNG)
+![IBM 29 Card Punch](/doc/illustrations/ibmcardsort/IBM04.PNG)
 
 1928 年，IBM 推出了标准的80列、矩形孔卡片，该卡片成为了当时数据处理的事实标准。
 
@@ -24,7 +24,7 @@
 
 首先，我们需要了解打孔卡片的工作原理：每个卡片由 10 行编号为 0 至 9 的区域组成，以及一块区域，用于第 11 行和第 12 行（注意，没有编号为第 10 的行）。
 
-![IBM Punch Card](./illustrations/IBM01_1.PNG)
+![IBM Punch Card](/doc/illustrations/ibmcardsort/IBM01_1.PNG)
 
 每列的穿孔组合用于表示单个字符：
 * 数字通过在行 0 至行 9 中直接打一个孔来表示。
@@ -32,15 +32,15 @@
 
 比如数字 `1` 可以这么打孔:
 
-![IBM Punch Card 1](./illustrations/IBM03_1.PNG)
+![IBM Punch Card 1](/doc/illustrations/ibmcardsort/IBM03_1.PNG)
 
 字母 `A` 可以这么打孔
 
-![IBM Punch Card A](./illustrations/IBM02_1.PNG)
+![IBM Punch Card A](/doc/illustrations/ibmcardsort/IBM02_1.PNG)
 
 下面这段视频可以让你感受一下当年在卡片上打孔的操作过程：
 
-![IBM 29 Card Punch Working](tu)
+https://www.youtube.com/watch?v=YnnGbcM-H8c&t=42s
 
 ## IBM Sorter
 
@@ -50,7 +50,7 @@
 
 IBM 提供用于对打孔卡片进行排序的机器 IBM Sorters。
 
-![IBM Type 82 Sorter](./illustrations/IBM05.PNG)
+![IBM Type 82 Sorter](/doc/illustrations/ibmcardsort/IBM05.PNG)
 
 IBM Sorter 有 13 个口袋，其中 12 个口袋对应卡片的 12 行，还有 1 个口袋用于空白、拒绝和错误。
 
@@ -66,11 +66,11 @@ IBM Sorter 有 13 个口袋，其中 12 个口袋对应卡片的 12 行，还有
 
 熟悉排序算法的朋友，一定会发现这很像基数排序（Radix Sort）的思想。
 
-![IBM Type 82 Sorter Working](tu)
+[IBM Type 82 Sorter Working]：https://www.youtube.com/watch?v=RPOqkrH25VU
 
 除了 IBM Sorter，IBM 还开发了一款叫做 IBM Collator 的机器。这种机器的功能类似于合并算法，可以将两堆已排序好的卡片合并成一堆。
 
-![IBM 088 Collator](./illustrations/IBM06.PNG)
+![IBM 088 Collator](/doc/illustrations/ibmcardsort/IBM06.PNG)
 
 这种机械式的排序方法虽然效率不高，但它为我们提供了一种重要的思路，即利用机器来完成大规模数据的处理。
 
@@ -85,3 +85,14 @@ IBM Sorter 有 13 个口袋，其中 12 个口袋对应卡片的 12 行，还有
 从最初简单的冒泡排序、插入排序、到后来复杂的合并排序、快速排序、桶排序，排序算法的发展历程也见证了计算机技术的不断进步和演变。
 
 如果你想了解排序算法的历史演变，关注我，接下来的文章将会带你深入探索其中奥秘。
+
+参考资料：
+ 1. http://www.columbia.edu/cu/computinghistory/sorter.html
+
+ 2. http://www.columbia.edu/cu/computinghistory/collator.html
+
+ 3. https://www.youtube.com/watch?v=YnnGbcM-H8c&t=42s
+
+ 4. https://www.youtube.com/watch?v=RPOqkrH25VU
+
+ 5. http://www.quadibloc.com/comp/cardint.htm
