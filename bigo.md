@@ -255,19 +255,9 @@ for(int i = 0; i < n; i++)
 
 关于算法复杂度具体的应用，我们会在之后介绍排序算法历史的文章中详细讲解，到时候我们一起来聊聊科学家们是如何探索特定问题的细节，并解决问题的。
 
----
-
-
-
-WWH 系列文章列表：
-
-[1] [Why - 为什么说 JavaScript 更像一门编译型语言](https://mp.weixin.qq.com/s?__biz=MzI5NjA1MDQ4NA==&mid=2454608234&idx=1&sn=5b2b7c62d18f01ce5dfa7607bc86a12b&chksm=fbf0b331cc873a275a5f3d42081549feb668e9d1beea7ce78125c0a547728a9cb262ff266194&scene=21#wechat_redirect)
-
-[2] [What - What - 什么是依赖注入💉？](https://mp.weixin.qq.com/s?__biz=MzI5NjA1MDQ4NA==&mid=2454608405&idx=1&sn=5237d417b8a7d26ff11a7fea13c42f3d&chksm=fbf0b04ecc873958d4c0764d0bf2552da9ebd36cac39b4222af1c47fcca562b8a772561146fb&token=973806712&lang=zh_CN#rd)
-
 参考资料：
 
-[1] https://home.csulb.edu/~tebert/teaching/lectures/328/bigO/bigO.pdf
+1. https://home.csulb.edu/~tebert/teaching/lectures/328/bigO/bigO.pdf
 
-[2] https://tandy.cs.illinois.edu/big-oh.pdf
+2. https://tandy.cs.illinois.edu/big-oh.pdf
 
