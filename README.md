@@ -2,19 +2,19 @@
 
 ## 算法复杂度分析 
 
-1. [什么是算法复杂度 Big O？](./bigo.md)
+1. [如何清晰地理解算法复杂度 Big O?](./bigo.md)
 
 ## 排序
 
 1. [没有计算机的时代，数据如何排序？](./Sort/IBMpunchcardsort.md)
 
-2. [插入排序（Insertion Sort）：虽然算法复杂度效率不高，但却是使用率最高的排序算法](./Sort/insertionsort.md)
+2. [插入排序（Insertion Sort）：为什么效率不高，却是使用率最高的排序算法？](./Sort/insertionsort.md)
 
 3. [归并排序（Merge Sort）：一个被所有教科书嫌弃的算法，我们为什么还要学？](./Sort/mergesort.md)
 
 4. [归并排序的历史：冯·诺依曼的第一个计算机程序是怎么做出来的？](./Sort/mergesort%20history.md)
 
-5. [快速排序（Quick Sort）：为什么快？支点的选择加双指针遍历](./Sort/quicksort.md)
+5. [快速排序（Quick Sort）：为什么快？](./Sort/quicksort.md)
 
 6. [堆排序（Heap Sort）：我们学习它可能并不是为了排序](./Sort/heapsort.md)
 
