@@ -78,5 +78,6 @@ https://www.inference.org.uk/itprnn/book.pdf*
 
 本文参考资料：
 1. http://mindhacks.cn/2008/06/13/why-is-quicksort-so-quick/
+
 2. https://www.inference.org.uk/itprnn/book.pdf
 
