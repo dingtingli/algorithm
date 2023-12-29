@@ -14,7 +14,7 @@
 
 4. [归并排序的历史：冯·诺依曼的第一个计算机程序是怎么做出来的？](./Sort/mergesort%20history.md)
 
-5. [快速排序（Quick Sort）：为什么快？分治策略加双指针遍历](./Sort/quicksort.md)
+5. [快速排序（Quick Sort）：为什么快？支点的选择加双指针遍历](./Sort/quicksort.md)
 
 6. [堆排序（Heap Sort）：我们学习它可能并不是为了排序](./Sort/heapsort.md)
 

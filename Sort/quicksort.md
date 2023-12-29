@@ -1,4 +1,4 @@
-# 快速排序（Quick Sort）为什么快？分治策略加双指针遍历
+# 快速排序（Quick Sort）为什么快？支点的选择加双指针遍历
 
 在排序的算法中，1945 年由[冯诺依曼发明](./mergesort%20history.md)的[归并排序（Merge Sort）](./mergesort.md)，是一种典型利用分治策略高效解决问题的算法。
 
