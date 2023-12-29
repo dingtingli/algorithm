@@ -8,7 +8,7 @@
 
 1. [没有计算机的时代，数据如何排序？](./Sort/IBMpunchcardsort.md)
 
-2. [插入排序（Insertion Sort）：虽然它的算法复杂度效率不高，但却是使用频率最高的排序算法](./Sort/insertionsort.md)
+2. [插入排序（Insertion Sort）：虽然算法复杂度效率不高，但却是使用率最高的排序算法](./Sort/insertionsort.md)
 
 3. [归并排序（Merge Sort）：一个被所有教科书嫌弃的算法，我们为什么还要学？](./Sort/mergesort.md)
 
