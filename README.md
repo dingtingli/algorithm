@@ -22,7 +22,7 @@
 
 8. [还是一个游戏，让你理解三分法的本质](./Sort/weightingproblem.md)
 
-9. 从二分法的本质出发，理解为什么排序算法的复杂度不可能小于 O(nlogn)
+9. [从二分法的本质出发，理解为什么排序算法的复杂度不可能小于 O(nlogn)](./Sort/why%20nlogn%20is%20the%20best%20in%20the%20compare%20sort.md)
 
 10. 为什么排序算法还是不够快？
 
