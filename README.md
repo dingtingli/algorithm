@@ -24,7 +24,7 @@
 
 9. [从二分法的本质出发，理解为什么排序算法的复杂度不可能小于 O(nlogn)](./Sort/why%20nlogn%20is%20the%20best%20in%20the%20compare%20sort.md)
 
-10. 为什么排序算法还是不够快？
+10. [为什么排序算法还是不够快？](./Sort/why%20sort%20algorithm%20is%20not%20quick.md)
 
 11. 每次排序调用 `.sort()` 方法时，你都在使用世界上最快的排序算法 Timsort
 
