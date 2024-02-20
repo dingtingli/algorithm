@@ -2,6 +2,8 @@
 
 原文地址：http://www.inference.org.uk/mackay/sorting/sorting.html
 
+作者：David MacKay
+
 许多文章都对堆排序（HEAPSORT）和快速排序（QUICKSORT）进行了比较。
 
 其中大部分都是这样说的："两者都需要 `NlogN` 的平均时间，但 QUICKSORT 的良好表现通常在实践中胜过 HEAPSORT。
