@@ -80,7 +80,7 @@ IBM Sorter 的工作原理，实际上是基数排序（Radix Sort）的一个�
 
 这也是冯·诺依曼写的第一个程序，当年是写在手稿上，高德纳发现后将其改写为符号化的汇编语言。
 
-![冯·诺依曼手稿](/doc/illustrations/mergesort/mergesorthistory01.png)
+![冯·诺依曼合并算法手稿](/doc/illustrations/mergesort/mergesorthistory01.png)
 
 [归并排序的历史：冯·诺依曼的第一个计算机程序是怎么做出来的？](mergesort%20history.md)
 
