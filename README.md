@@ -28,9 +28,11 @@
 
 11. [世界上最快的排序算法 Timsort，你每次调用 `.sort()` 方法时都在使用它](./Sort/timsort.md)
 
-12. [翻译：从信息论的角度分析堆排序和快速排序](./Sort/heapsort%2C%20quicksort%2C%20and%20entropy.md)
+12. [算法学习从放弃到入门，花了 42 天我终于走完了第一步](./Sort/abandon%20gpt.md)
 
-13. [算法学习从放弃到入门，花了 42 天我终于走完了第一步](./Sort/abandon%20gpt.md)
+扩展阅读： 
+
+1. [翻译：从信息论的角度分析堆排序和快速排序](./Sort/heapsort%2C%20quicksort%2C%20and%20entropy.md)
 
 **更多内容可以关注我的公众号：dingtingli**
 
