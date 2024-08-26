@@ -26,7 +26,7 @@
 
 选择好支点后，我们可以对数组进行划分操作。这也是快速排序算法中最重要的部分。
 
-![划分](/doc/illustrations/Quicksort/quicksort01.png)
+![划分](/doc/illustrations/quicksort/quicksort01.png)
 
 在这一过程中，通过一次数组扫描并设置两个指针 `i` 和 `j`，形成所谓的“双指针遍历”，同时确保在扫描过程中满足以下条件：
 
@@ -34,7 +34,7 @@
 - [i+1, j-1] 之间的元素都 `>pivot`。
 - [j, hi-1] 之间的元素未被扫描。
 
-![划分扫描条件](/doc/illustrations/Quicksort/quicksort02.png)
+![划分扫描条件](/doc/illustrations/quicksort/quicksort02.png)
 
 我们来详细描述一下“双指针遍历”过程中的各个阶段：
 
@@ -44,25 +44,25 @@
 
 在初始状态下 [j, hi-1] 之间是所有未扫描的元素，[lo, i] (`<=pivot`) 和 [i+1, j-1] (`>pivot`) 的区间都不存在。
 
-![划分扫描初始化](/doc/illustrations/Quicksort/quicksort03.png)
+![划分扫描初始化](/doc/illustrations/quicksort/quicksort03.png)
 
 **2. 扫描过程**：
 
 当 `A[j] > pivot` 时，`j` 的值加 `1`。保证 [i+1, j-1] 之间的元素满足 `>piovt`。
 
-![动图 划分扫描过程 1 ](/doc/illustrations/Quicksort/quicksort04.gif)
+![动图 划分扫描过程 1 ](/doc/illustrations/quicksort/quicksort04.gif)
 
 当 `A[j] <= pivot` 时，`i` 加 `1`，交换 `A[i]` 和 `A[j]` 的值之后，`j` 再加 `1`。
 
 这样同时保证了 [lo, i] 之间的元素满足 `<=pivot`，并且 [i+1, j-1] 之间的元素满足 `>piovt`。
 
-![动图 划分扫描过程 2](/doc/illustrations/Quicksort/quicksort05.gif)
+![动图 划分扫描过程 2](/doc/illustrations/quicksort/quicksort05.gif)
 
 **3. 扫描结束**：
 
 扫描完成时 `j = hi`，此时我们需要将支点 `A[hi]` 置于正确位置。通过交换 `A[hi]` 与 `A[i+1]`，支点就位，返回其索引。
 
-![动图 划分扫描结束](/doc/illustrations/Quicksort/quicksort06.gif)
+![动图 划分扫描结束](/doc/illustrations/quicksort/quicksort06.gif)
 
 将上述的扫描过程转化为代码是一个有趣的挑战，你可以先思考一下如何实现。这里提供一个我编写的函数，以供参考：
 
@@ -80,7 +80,7 @@ def partition(A, lo, hi):
 
 下面的动图更好地展示了双指针遍历扫描代码的执行过程：
 
-![动图 划分扫描执行过程](/doc/illustrations/Quicksort/quicksort08.gif)
+![动图 划分扫描执行过程](/doc/illustrations/quicksort/quicksort08.gif)
 
 注意：你可以在我的 github 仓库中查看源代码 [quicksort01](/Code/quicksort01.py)
 
@@ -98,11 +98,11 @@ def quicksort(A, lo, hi):
 
 整个递归过程如下面动图所示：
 
-![动图 递归执行](/doc/illustrations/Quicksort/quicksort09.gif)
+![动图 递归执行](/doc/illustrations/quicksort/quicksort09.gif)
 
 详细递归执行过程的静态示意图如下：
 
-![递归执行示意图](/doc/illustrations/Quicksort/quicksort07.png)
+![递归执行示意图](/doc/illustrations/quicksort/quicksort07.png)
 
 注意：你可以在我的 github 仓库中查看源代码 [quicksort01](/Code/quicksort01.py)
 
@@ -114,7 +114,7 @@ def quicksort(A, lo, hi):
  - 计算和更新结构： 使用两个指针计算结果，并根据需要更新结果。
  - 处理边界和特殊情况： 考虑两个指针到达数组边界时的情况。
 
-![动图 划分扫描过程](/doc/illustrations/Quicksort/quicksort05.gif)
+![动图 划分扫描过程](/doc/illustrations/quicksort/quicksort05.gif)
 
 双指针技术不仅用于快速排序，还广泛应用于其他算法和问题，例如：在有序数组中查找特定和的两个数；计算数组的最大/最小子数组和；检测链表中是否存在环。
 
@@ -130,7 +130,7 @@ def quicksort(A, lo, hi):
 
 此时，每次支点都不变动，导致划分会将长度为 `n` 的数组分为长度为 `n-1` 和 `0` 的两个子数组。这导致递归深度达到了 `n` 层，而每一层都需要 `O(n)` 的时间复杂度来去除一个元素，因此总的运行时间达到了 `O(n^2)`。
 
-![动图 重复元素划分扫描过程](/doc/illustrations/Quicksort/quicksort11.gif)
+![动图 重复元素划分扫描过程](/doc/illustrations/quicksort/quicksort11.gif)
 
 为了解决这个问题，我们对双指针的遍历方向进行了调整，采用了双向划分策略。
 
@@ -144,7 +144,7 @@ def quicksort(A, lo, hi):
 - [i, j] 之间的元素未被扫描。
 - [j+1, hi] 之间的元素都 `>=pivot`。
 
-![划分扫描条件](/doc/illustrations/Quicksort/quicksort12.png)
+![划分扫描条件](/doc/illustrations/quicksort/quicksort12.png)
 
 同样，我们也来详细描述一下这种“双指针遍历”过程中的各个阶段：
 
@@ -152,7 +152,7 @@ def quicksort(A, lo, hi):
 
 扫描开始之前，设置 `i=lo` 和 `j=hi+1`，确保上述条件得以满足。
 
-![划分扫描初始化](/doc/illustrations/Quicksort/quicksort13.png)
+![划分扫描初始化](/doc/illustrations/quicksort/quicksort13.png)
 
 **2. 扫描过程**：
 
@@ -160,13 +160,13 @@ def quicksort(A, lo, hi):
 - 从数组右端开始，`j` 向左扫描，直到遇到小于或等于支点的元素。
 - 交换这两个元素，然后继续上述的扫描过程。
 
-![动图 划分扫描过程](/doc/illustrations/Quicksort/quicksort14.gif)
+![动图 划分扫描过程](/doc/illustrations/quicksort/quicksort14.gif)
 
 **3. 扫描结束**：
 
 当 `i` 和 `j` 两指针相遇时，扫描结束。此时，为了将支点 A[lo] 放置在其正确的位置，我们需要交换 A[lo] 与 A[j]。完成这一操作后，返回支点的索引值。
 
-![动图 划分扫描结束](/doc/illustrations/Quicksort/quicksort15.gif)
+![动图 划分扫描结束](/doc/illustrations/quicksort/quicksort15.gif)
 
 
 将上述的扫描过程转化为代码是一个有趣的挑战，你可以先思考一下如何实现。这里提供一个我编写的函数，以供参考：
@@ -206,17 +206,17 @@ def partition(arr, low, high):
 
 使用新的划分策略，当遇到相同元素时，扫描会停止，并交换 `i` 和 `j` 指针的值。这样的操作虽然增加了元素交换的次数，但是得到的支点使左右子数组更加均衡，从而充分利用了分治策略，使得算法的运行时间仍为 `O(nlogn)`。
 
-![动图 重复元素划分扫描过程](/doc/illustrations/Quicksort/quicksort16.gif)
+![动图 重复元素划分扫描过程](/doc/illustrations/quicksort/quicksort16.gif)
 
 ## 快速排序的优化
 
 我们已经深入探讨了快速排序算法及其两种主要的划分策略。
 
-![动图 划分扫描过程 1](/doc/illustrations/Quicksort/quicksort05.gif)
+![动图 划分扫描过程 1](/doc/illustrations/quicksort/quicksort05.gif)
 
 你可以在我的 github 仓库中查看源代码 [quicksort01](/Code/quicksort01.py)
 
-![动图 划分扫描过程 2](/doc/illustrations/Quicksort/quicksort14.gif)
+![动图 划分扫描过程 2](/doc/illustrations/quicksort/quicksort14.gif)
 
 你可以在我的 github 仓库中查看源代码 [quicksort02](/Code/quicksort02.py)
 

@@ -116,7 +116,7 @@ IBM Sorter 的工作原理，实际上是基数排序（Radix Sort）的一个�
 
 1959年，英国科学家 Tony Hoare 提出了快速排序算法，它基于相同的递归和分治思想，但在内存使用上更为高效。
 
-![快速排序（Quick Sort）递归执行示意图](/doc/illustrations/Quicksort/quicksort07.png)
+![快速排序（Quick Sort）递归执行示意图](/doc/illustrations/quicksort/quicksort07.png)
 
 [快速排序（Quick Sort）：为什么快？](quicksort.md)
 
